@@ -22,4 +22,4 @@ jobs:
         run: chmod +x mvnw
 
       - name: Build (homolog)
-        run: ./mvnw clean install -Dquarkus.profile=test
+        run: ./mvnw clean install "-Dquarkus.profile=test"

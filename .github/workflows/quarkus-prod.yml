@@ -22,4 +22,4 @@ jobs:
         run: chmod +x mvnw
 
       - name: Build (prod)
-        run: ./mvnw clean install -Dquarkus.profile=prod
+        run: ./mvnw clean install "-Dquarkus.profile=prod"
