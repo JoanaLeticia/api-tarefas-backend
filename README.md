@@ -1,71 +1,119 @@
-# api-tarefas
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+# 📋 API de Gerenciamento de Tarefas
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+Este projeto consiste em uma API REST para gerenciamento de tarefas, desenvolvida com [Quarkus](https://quarkus.io/), com front-end em [Angular](https://angular.io/) e banco de dados PostgreSQL. Ele foi criado como projeto prático para demonstrar a **padronização de ambientes de testes, homologação e produção**, conforme estudo de caso baseado nas práticas adotadas pelo Spotify.
 
-## Running the application in dev mode
+---
 
-You can run your application in dev mode that enables live coding using:
+## 🧩 Funcionalidades da API
 
-```shell script
-./mvnw quarkus:dev
+- Criar tarefa
+- Listar tarefas
+- Atualizar tarefa
+- Deletar tarefa
+- Organização por perfis de ambiente (`dev`, `test`, `prod`)
+
+---
+
+## 🌍 Ambientes e Perfis
+
+O projeto está estruturado para suportar múltiplos ambientes, com configurações separadas para cada um:
+
+| Ambiente     | Perfil               | Banco de Dados              | Uso                          |
+|--------------|----------------------|-----------------------------|-------------------------------|
+| Desenvolvimento | `dev`               | `tarefas_dev`               | Desenvolvimento local com recarga automática |
+| Homologação  | `test`              | `tarefas_test`              | Testes de integração / pré-produção |
+| Produção     | `prod`              | `tarefas_prod`              | Ambiente final (simulado)     |
+
+Cada ambiente possui seu próprio arquivo de configuração:
+
+- `application-dev.properties`
+- `application-test.properties`
+- `application-prod.properties`
+
+---
+
+## 🚀 Como executar
+
+### Requisitos
+- Java 17+
+- Maven
+- PostgreSQL em execução
+
+### Comandos
+
+**Ambiente de desenvolvimento:**
+```bash
+./mvnw quarkus:dev -Dquarkus.profile=dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
-
-## Packaging and running the application
-
-The application can be packaged using:
-
-```shell script
-./mvnw package
+**Ambiente de homologação (teste):**
+```bash
+./mvnw quarkus:dev -Dquarkus.profile=test
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+**Ambiente de produção (simulado):**
+```bash
+./mvnw quarkus:dev -Dquarkus.profile=prod
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+---
 
-## Creating a native executable
+## 💻 Front-end Angular
 
-You can create a native executable using:
+O front-end está disponível no diretório `/frontend` (ou em repositório separado) e foi configurado para se comunicar com a API conforme o ambiente:
 
-```shell script
-./mvnw package -Dnative
+- Ambiente `dev`: `http://localhost:8080`
+- Ambiente `test`: `http://homolog.frontend.com`
+- Ambiente `prod`: `https://app.minhaempresa.com.br`
+
+> O front usa arquivos `environment.ts`, `environment.test.ts` e `environment.prod.ts` para trocar URLs de API.
+
+---
+
+## 🛠️ Padronização e Práticas DevOps
+
+Este projeto segue os princípios de padronização abordados no estudo de caso do Spotify:
+
+- Separação de ambientes com perfis distintos
+- Arquivos de configuração isolados por ambiente
+- Estrutura de banco de dados separada por perfil
+- Branches Git por ambiente (`main`, `dev`, `homolog`)
+- Scripts de execução padronizados
+- (Opcional) Integração com CI/CD via GitHub Actions
+
+---
+
+## 📁 Estrutura de diretórios
+
+```
+apitarefas/
+├── src/
+├── src/main/resources/
+│   ├── application-dev.properties
+│   ├── application-test.properties
+│   └── application-prod.properties
+├── target/
+└── README.md
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+---
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+## 🧪 Testes
 
-You can then execute your native executable with: `./target/api-tarefas-1.0.0-SNAPSHOT-runner`
+- Testes podem ser executados no perfil `test` sem afetar dados do ambiente `dev` ou `prod`.
+- (Opcional) Implementação de testes unitários com `@Test` e simulação de chamadas REST.
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+---
 
-## Related Guides
+## 📌 Autora
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- RESTEasy Classic's REST Client Mutiny support ([guide](https://quarkus.io/guides/resteasy-client)): Enable Mutiny for the REST client
-- SmallRye OpenAPI ([guide](https://quarkus.io/guides/openapi-swaggerui)): Document your REST APIs with OpenAPI - comes with Swagger UI
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- SmallRye JWT ([guide](https://quarkus.io/guides/security-jwt)): Secure your applications with JSON Web Token
-- SmallRye JWT Build ([guide](https://quarkus.io/guides/security-jwt-build)): Create JSON Web Token with SmallRye JWT Build API
+Joana – Projeto prático para a disciplina de Computação Orientada a Serviços  
+Curso de Sistemas de Informação
 
-## Provided Code
+---
 
-### REST
+## 📚 Referência técnica
 
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+Este projeto se baseia em conceitos extraídos do estudo de caso:  
+**Spotify – Padronização de Ambientes com DevOps e CI/CD**
