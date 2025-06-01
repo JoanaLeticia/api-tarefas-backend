@@ -23,3 +23,6 @@ jobs:
 
       - name: Build do projeto com Maven (perfil dev)
         run: ./mvnw clean install -Dquarkus.profile=dev
+
+      - name: Executar testes
+        run: ./mvnw test -Dquarkus.profile=test
