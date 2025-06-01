@@ -1,0 +1,25 @@
+name: Build Quarkus Project
+
+on:
+  push:
+    branches: [ dev, homolog, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Conceder permissão ao Maven wrapper
+        run: chmod +x mvnw
+
+      - name: Build (homolog)
+        run: ./mvnw clean install -Dquarkus.profile=test
