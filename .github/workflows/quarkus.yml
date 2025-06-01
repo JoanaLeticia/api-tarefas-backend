@@ -2,11 +2,26 @@ name: Build Quarkus Project
 
 on:
   push:
-    branches: [ dev, homolog, main ]
+    branches: [ main, dev, homolog ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5433:5432
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+          POSTGRES_DB: tarefas_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout do código
@@ -15,14 +30,11 @@ jobs:
       - name: Configurar Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '17'
+          distribution: 'temurin'
 
-      - name: Conceder permissão ao Maven wrapper
+      - name: Dar permissão ao Maven wrapper
         run: chmod +x mvnw
 
-      - name: Build do projeto com Maven (perfil dev)
-        run: ./mvnw clean install "-Dquarkus.profile=dev"
-
-      - name: Executar testes
-        run: ./mvnw test "-Dquarkus.profile=test"
+      - name: Build com Maven no perfil de teste
+        run: ./mvnw clean install "-Dquarkus.profile=test"
