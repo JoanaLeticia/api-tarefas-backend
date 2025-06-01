@@ -1,8 +1,12 @@
+
 name: Build Quarkus Project
 
 on:
   push:
-    branches: [ main, dev, homolog ]
+    branches:
+      - dev
+      - homolog
+      - main
 
 jobs:
   build:
@@ -36,5 +40,10 @@ jobs:
       - name: Dar permissão ao Maven wrapper
         run: chmod +x mvnw
 
-      - name: Build com Maven no perfil de teste
-        run: ./mvnw clean install "-Dquarkus.profile=test"
+      - name: Build com perfil TEST (dev ou homolog)
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/homolog'
+        run: ./mvnw clean install -Dquarkus.profile=test
+
+      - name: Build com perfil PROD (main)
+        if: github.ref == 'refs/heads/main'
+        run: ./mvnw clean install -Dquarkus.profile=prod
